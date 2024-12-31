@@ -32,7 +32,7 @@ public class User {
     @Column(name = "name", nullable = false, columnDefinition = "varchar(255)")
     private String name;
 
-    @Column(name = "email", nullable = false, columnDefinition = "varchar(255)")
+    @Column(name = "email", nullable = false, columnDefinition = "varchar(255)", unique = true)
     private String email;
 
     // Eager because every time we pull an user, we'll get all their uniqueDigits 
