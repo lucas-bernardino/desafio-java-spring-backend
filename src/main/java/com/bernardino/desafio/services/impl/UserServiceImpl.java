@@ -41,6 +41,22 @@ public class UserServiceImpl implements UserService {
 
         return new UserDTO(user.getUuid(), user.getName(), user.getEmail());
     }
+
+    @Override
+    public void deleteUserById(UUID uuid) {
+        userRepository.deleteById(uuid);
+    }
+
+    @Override
+    public void updateUserById(UUID uuid, String name, String email) {
+        var user = userRepository.findById(uuid).orElseThrow(() -> new UserNotFoundException());
+
+        user.setName(name);
+        user.setEmail(email);
+
+        userRepository.save(user);
+        
+    }
     
     
 }

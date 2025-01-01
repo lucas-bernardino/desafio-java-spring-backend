@@ -3,6 +3,7 @@ package com.bernardino.desafio.services.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -35,6 +37,11 @@ public class UserServiceImplTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         userServiceImpl = new UserServiceImpl(this.userRepository);
+    }
+
+    @BeforeEach
+    void resetMocks() {
+        reset(userRepository);
     }
 
     @Test
@@ -96,5 +103,47 @@ public class UserServiceImplTest {
         assertThrows(UserNotFoundException.class,() -> userServiceImpl.getUserById(userId));
 
         verify(userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    void itShouldDeleteUserById() {
+        var uuid = UUID.randomUUID();
+
+        userServiceImpl.deleteUserById(uuid);
+
+        verify(userRepository, times(1)).deleteById(uuid);
+    }
+
+    @Test
+    void itShouldUpdateUserById() {
+        var uuid = UUID.randomUUID();
+        var user = User.builder()
+            .uuid(uuid)
+            .name("Lucas Bernardino")
+            .email("lucas@gmail.com")
+            .build();
+
+        when(userRepository.findById(uuid)).thenReturn(Optional.of(user));
+
+        userServiceImpl.updateUserById(uuid, "Gabriel", "gabriel@gmail.com");
+
+        var captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository, times(1)).save(captor.capture());
+
+        var updatedUser = captor.getValue();
+        assertEquals("Gabriel", updatedUser.getName());
+        assertEquals("gabriel@gmail.com", updatedUser.getEmail());
+    }
+
+    @Test
+    void itShouldThrowUserNotFoundWhenUpdating() {
+        var uuid = UUID.randomUUID();
+
+        when(userRepository.findById(uuid)).thenReturn(Optional.empty());
+
+
+        verify(userRepository, times(0)).save(any());
+
+        assertThrows(UserNotFoundException.class, () -> {userServiceImpl.updateUserById(uuid, "", "");});
     }
 }
