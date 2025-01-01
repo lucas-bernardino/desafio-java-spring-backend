@@ -12,10 +12,6 @@ public class DesafioApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DesafioApplication.class, args);
-
-		var uniqueDigit = new UniqueDigit(BigInteger.valueOf(9875), 4).getResult();
-
-		System.out.println("Response is" + uniqueDigit);
 	}
 
 }
