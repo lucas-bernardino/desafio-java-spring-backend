@@ -40,6 +40,9 @@ public class User {
     @Builder.Default // Every time user is instantiated, a new empty list is created. 
     private List<UniqueDigit> uniqueDigits = new ArrayList<>();
 
-
-
+    
+    public void addUniqueDigit(UniqueDigit uniqueDigit) {
+        uniqueDigit.setUser(this);
+        uniqueDigits.add(uniqueDigit);
+    }
 }
