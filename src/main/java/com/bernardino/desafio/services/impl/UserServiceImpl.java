@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import com.bernardino.desafio.domain.User;
 import com.bernardino.desafio.repository.UserRepository;
 import com.bernardino.desafio.services.UserService;
+import com.bernardino.desafio.services.dto.UserDTO;
 import com.bernardino.desafio.services.exceptions.EmailAlreadyExistsException;
+import com.bernardino.desafio.services.exceptions.UserNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,5 +34,13 @@ public class UserServiceImpl implements UserService {
         
         return user.getUuid();
     }
+
+    @Override
+    public UserDTO getUserById(UUID userId) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+
+        return new UserDTO(user.getUuid(), user.getName(), user.getEmail());
+    }
+    
     
 }

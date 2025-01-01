@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.bernardino.desafio.controller.dto.CreateUserRequestDTO;
 import com.bernardino.desafio.services.UserService;
+import com.bernardino.desafio.services.dto.UserDTO;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class UserControllerTest {
@@ -52,5 +53,20 @@ public class UserControllerTest {
 
         assertEquals(body.id(), uuidGenerated);
         verify(userService, times(1)).createUser(request.name(), request.email());
+    }
+
+    @Test
+    void itShouldGetUserById() {
+        var uuid = UUID.randomUUID();
+        var userDTO = new UserDTO(uuid, "Lucas Bernardino", "lucas.bernardino@gmail.com");
+
+        when(userService.getUserById(uuid)).thenReturn(userDTO);
+
+        var response = userController.getUserById(uuid);
+        var body = response.getBody();
+
+        assertEquals(body.uuid(), userDTO.uuid());
+        assertEquals(body.name(), userDTO.name());
+        assertEquals(body.email(), userDTO.email());
     }
 }
