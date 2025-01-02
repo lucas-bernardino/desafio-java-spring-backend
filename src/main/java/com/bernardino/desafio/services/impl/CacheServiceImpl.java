@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.bernardino.desafio.services.CacheService;
 
+@Service
 public class CacheServiceImpl<T> implements CacheService<T> {
 
     Map<String, T> cache = new CacheMap<>();
