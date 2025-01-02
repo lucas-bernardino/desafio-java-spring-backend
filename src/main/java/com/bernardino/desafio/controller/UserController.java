@@ -56,10 +56,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateUserById(@PathVariable UUID uuid, @RequestBody @Valid UpdateUserRequestDTO updateUserRequestDTO) {
+    @PutMapping("/{userId}")
+    public ResponseEntity<Void> updateUserById(@PathVariable UUID userId, @RequestBody @Valid UpdateUserRequestDTO updateUserRequestDTO) {
         
-        userService.updateUserById(uuid, updateUserRequestDTO.name(), updateUserRequestDTO.email());
+        userService.updateUserById(userId, updateUserRequestDTO.name(), updateUserRequestDTO.email());
         
         return ResponseEntity.noContent().build();
     }
